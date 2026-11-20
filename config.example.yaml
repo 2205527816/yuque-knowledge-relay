@@ -1,0 +1,63 @@
+# 复制为 config.yaml 后填写。密钥建议放 .env，不要提交。
+yuque:
+  token: ""                       # 建议留空，改用 .env 的 YUQUE_TOKEN
+  base_url: "https://www.yuque.com/api/v2"
+  pending_library: "待定"          # 无法分类的文章落到这里，需与下方 libraries 中的名称一致
+
+llm:
+  base_url: "https://api.openai.com/v1"
+  api_key: ""                     # 建议留空，改用 .env 的 LLM_API_KEY
+  classify_model: ""              # 例如 gpt-4o-mini；必填
+  explain_model: ""               # 释义模型；必填
+
+limits:
+  density: 2.5                    # 每千字推荐多少个注释词
+  floor: 3                        # 推荐数量下限
+  hard_cap: 14                    # 推荐数量上限
+
+classify:
+  threshold: 0.5                  # 最高分低于此值进待定
+  body_chars: 3000                # 分类时送入正文的最大字数
+
+explain:
+  online: true                    # true 时联网查百度百科与 Bing
+  proxy: ""                       # 联网查询的代理，留空为直连
+
+# 兼容旧配置名；当前每个注释词在全文只标注首次出现的位置
+annotate_first_para_only: false
+
+processing:
+  deadline_minutes: 10            # 导入后超过此时间仍在中间态则标记失败
+
+retention:
+  auto_archive_written: false     # 写回成功后自动归档本地记录
+
+backup:
+  enabled: false
+  provider: github
+  repo: ""                        # owner/repo，建议私有仓库
+  branch: "main"
+  token: ""                       # 建议放 .env 的 GITHUB_TOKEN
+  order: "before"                 # before | after
+  required: false                 # true 时备份失败会阻止写语雀
+  dry_run: true                   # true 只写本地 backup_preview/
+  dir: "backup_preview"
+  images:
+    enabled: false
+    repo: ""                      # 留空则用 backup.repo；必须公开，语雀才能拉图
+    branch: ""
+    url_template: "https://cdn.jsdelivr.net/gh/{repo}@{branch}/{path}"
+    quality: 82
+    max_width: 1600
+    max_images: 30
+    max_bytes: 15728640
+    required: false
+
+# 每个库的 name 必须与 profiles/<name>.md 的文件名一致。
+# namespace 与 slug 来自语雀库地址：https://www.yuque.com/<namespace>/<slug>
+# multiplier 为候选词倍率，可在网页上按库调整，范围 0.5 - 2.0。
+libraries:
+  - {name: 技术, namespace: your-namespace, slug: your-tech-repo, multiplier: 1.0}
+  - {name: 阅读, namespace: your-namespace, slug: your-reading-repo, multiplier: 1.0}
+  - {name: 生活, namespace: your-namespace, slug: your-life-repo, multiplier: 1.0}
+  - {name: 待定, namespace: your-namespace, slug: your-pending-repo, multiplier: 1.0}

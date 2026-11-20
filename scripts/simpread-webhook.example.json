@@ -1,0 +1,14 @@
+{
+  "name": "语雀知识库中转（云端）",
+  "url": "https://relay.example.com/ingest/simpread",
+  "type": "POST",
+  "fmt": "html",
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Ingest-Key": "换成你自己的随机串"
+  },
+  "body": {
+    "url": "{{url}}",
+    "content": "{{content}}"
+  }
+}

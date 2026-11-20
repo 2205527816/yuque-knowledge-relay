@@ -1,0 +1,155 @@
+{
+ "md": [
+  {
+   "name": "front-matter",
+   "text": "---\ntitle: 标题甲\nurl: https://ex.com/a/?utm_source=x&id=2\nauthor: 张三\ndate: 2024-05-01\n---\n\n# 另一个标题\n\n正文甲。\n",
+   "file": "a.md",
+   "title": "标题甲",
+   "source_url": "https://ex.com/a?id=2",
+   "author": "张三",
+   "published_at": "2024-05-01",
+   "body_md": "# 另一个标题\n\n正文甲。",
+   "content_hash": "59313aaad15692f14221b8d0138f9f159127c2ffbc6d4e7b290a7657855e4c46"
+  },
+  {
+   "name": "h1-only",
+   "text": "# 标题乙\n\n正文乙。\n",
+   "file": "b.md",
+   "title": "标题乙",
+   "source_url": "",
+   "author": "",
+   "published_at": "",
+   "body_md": "正文乙。",
+   "content_hash": "706e9c5d14c806f6cc5afd50289b90d38b010548ae4b4fad09eaf630b39f25ea"
+  },
+  {
+   "name": "strip-h1",
+   "text": "---\ntitle: 标题丙\n---\n\n# 标题丙\n\n正文丙。\n",
+   "file": "c.md",
+   "title": "标题丙",
+   "source_url": "",
+   "author": "",
+   "published_at": "",
+   "body_md": "正文丙。",
+   "content_hash": "416277905121570c731a402eb05670e76c28d66c1e1b21d1c28dea6097e52d8e"
+  },
+  {
+   "name": "crlf",
+   "text": "---\r\ntitle: 标题丁\r\n---\r\n\r\n正文丁。\r\n",
+   "file": "d.md",
+   "title": "标题丁",
+   "source_url": "",
+   "author": "",
+   "published_at": "",
+   "body_md": "正文丁。",
+   "content_hash": "a937ef1803236e9127fce1146247ae21d4ece037a57cfc6d5478939f844d06ce"
+  },
+  {
+   "name": "body-url",
+   "text": "正文前 https://ex.com/p/?spm=1&from=x&q=中文 还有正文。\n",
+   "file": "e.md",
+   "title": "e",
+   "source_url": "https://ex.com/p?q=%E4%B8%AD%E6%96%87",
+   "author": "",
+   "published_at": "",
+   "body_md": "正文前 https://ex.com/p/?spm=1&from=x&q=中文 还有正文。",
+   "content_hash": "833f3ac6e52bd032e6e9f1dd2b1227bd59ca8be291ba233cfe696a5c76fde354"
+  },
+  {
+   "name": "filename-fallback",
+   "text": "没有标题的正文。\n",
+   "file": "我的文章.md",
+   "title": "我的文章",
+   "source_url": "",
+   "author": "",
+   "published_at": "",
+   "body_md": "没有标题的正文。",
+   "content_hash": "1556a0b3c0e1274a772183975103eaf2126d5f99070b161c8fe245c003ec39a9"
+  }
+ ],
+ "urls": [
+  {
+   "in": "https://a.com/x/?utm_source=1&b=2#frag",
+   "out": "https://a.com/x?b=2"
+  },
+  {
+   "in": "https://a.com",
+   "out": "https://a.com/"
+  },
+  {
+   "in": "not a url",
+   "out": ""
+  },
+  {
+   "in": "https://a.com/p/?spm=1&from=x&share_token=y&q=中文",
+   "out": "https://a.com/p?q=%E4%B8%AD%E6%96%87"
+  },
+  {
+   "in": "  https://A.com/Path/  ",
+   "out": "https://A.com/Path"
+  },
+  {
+   "in": "http://a.com/?z=1&a=2",
+   "out": "http://a.com/?z=1&a=2"
+  }
+ ],
+ "hashes": [
+  {
+   "in": "a  b\n\nc",
+   "out": "0e9f64031fcb2bc708b531c2a20441580425d151a38503f38592a7dd36019d3b"
+  },
+  {
+   "in": "中文\t空格",
+   "out": "233dd011a3b44173d2f56911a95e5742fc8aa3d5d3273fd6278128d59c87e4e2"
+  },
+  {
+   "in": "",
+   "out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "in": "line1\r\nline2",
+   "out": "1f5c080ae39f741cb927bef27d0a79de3eb78187a13f04d17f43963dc3eb7684"
+  }
+ ],
+ "scores": [
+  {
+   "name": "good",
+   "raw": "{\"scores\":[{\"library\":\"甲\",\"score\":0.8},{\"library\":\"乙\",\"score\":0.2},{\"library\":\"丙\",\"score\":0.1}]}",
+   "ok": true,
+   "pick": "甲",
+   "scores": {
+    "甲": 0.8,
+    "乙": 0.2,
+    "丙": 0.1
+   }
+  },
+  {
+   "name": "tie",
+   "raw": "{\"scores\":[{\"library\":\"甲\",\"score\":0.8},{\"library\":\"乙\",\"score\":0.8},{\"library\":\"丙\",\"score\":0.1}]}",
+   "ok": true,
+   "pick": "",
+   "scores": {
+    "甲": 0.8,
+    "乙": 0.8,
+    "丙": 0.1
+   }
+  },
+  {
+   "name": "low",
+   "raw": "{\"scores\":[{\"library\":\"甲\",\"score\":0.2},{\"library\":\"乙\",\"score\":0.2},{\"library\":\"丙\",\"score\":0.1}]}",
+   "ok": true,
+   "pick": "",
+   "scores": {
+    "甲": 0.2,
+    "乙": 0.2,
+    "丙": 0.1
+   }
+  },
+  {
+   "name": "missing",
+   "raw": "{\"scores\":[{\"library\":\"甲\",\"score\":0.8},{\"library\":\"乙\",\"score\":0.2}]}",
+   "ok": false,
+   "err": "缺少库：丙"
+  }
+ ]
+}

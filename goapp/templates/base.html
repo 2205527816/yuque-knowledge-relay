@@ -1,0 +1,47 @@
+{{define "base"}}<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{template "title" .}}</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  {{if eq .Section "icons"}}<link rel="stylesheet" href="/static/style.css?v=20261116a">{{end}}
+  <link rel="stylesheet" href="/static/kr-bauhaus-20261118/interface.css?v=20261119-review-viewport">
+  <script src="/static/kr-bauhaus-20261118/interface.js?v=20261119-review-viewport" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="site-width header-inner">
+      <a class="brand" href="/" aria-label="知识库中转站首页">
+        <svg class="brand-symbol" viewBox="0 0 100 100" aria-hidden="true"><use href="/static/kr-bauhaus-20261118/seals.svg#seal-logo"/></svg>
+        <span>知识库中转站</span>
+      </a>
+      <nav class="main-nav" aria-label="主导航">
+        <a href="/" {{if or (eq .Section "index") (eq .Section "doc")}}aria-current="page"{{end}}><span class="desktop-label">文章队列</span><span class="mobile-label">文章</span></a>
+        <a href="/libraries" {{if or (eq .Section "libraries") (eq .Section "profile")}}aria-current="page"{{end}}>知识库</a>
+      </nav>
+      <button type="button" class="button primary import-trigger" data-open-import><span class="plus" aria-hidden="true">+</span><span>导入<span class="desktop-label">文章</span></span></button>
+    </div>
+  </header>
+  <main id="main" class="site-width{{if eq .Section "icons"}} wrap{{end}}">
+    {{if .Msg}}<p class="flash ok" role="status">{{.Msg}}</p>{{end}}
+    {{if .Error}}<p class="flash bad" role="alert">{{.Error}}</p>{{end}}
+    {{template "content" .}}
+  </main>
+  <dialog id="import-dialog" class="operation-dialog" aria-labelledby="import-title">
+    <div class="dialog-head">
+      <h2 id="import-title">导入文章</h2>
+      <form method="dialog"><button class="icon-button" aria-label="关闭导入窗口">×</button></form>
+    </div>
+    <form method="post" action="/upload" enctype="multipart/form-data" class="upload-form">
+      <label for="article-file">上传 Markdown 或 HTML 文件</label>
+      <input type="file" id="article-file" name="file" accept=".md,.html,.htm" required>
+      <button class="button primary" type="submit">上传并处理</button>
+    </form>
+    <form method="post" action="/scan" class="scan-form">
+      <button class="button" type="submit">扫描 inbox</button>
+    </form>
+  </dialog>
+</body>
+</html>{{end}}

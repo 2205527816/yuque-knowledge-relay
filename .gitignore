@@ -1,0 +1,31 @@
+# 密钥与本地配置
+.env
+.env.*
+!.env.example
+config.yaml
+
+# 数据与运行时目录
+data/
+inbox/*
+!inbox/.gitkeep
+archive/
+backup_preview/
+logs/
+
+# 编译产物
+knowledge-relay
+knowledge-relay.exe
+*.exe
+*.test
+
+# 编辑器与系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# 临时文件
+*.tmp
+*.bak
+*.log

@@ -1,0 +1,146 @@
+{{define "title"}}文章队列 · 知识库中转站{{end}}
+{{define "content"}}
+<section class="queue-view view-transition" aria-labelledby="queue-heading">
+  <header class="page-head">
+    <div><h1 id="queue-heading">文章队列</h1><p>{{.Progress.Processing}} 篇待处理</p></div>
+    <div class="head-actions">
+      {{if .HasFailed}}
+      <form method="post" action="/docs/batch">
+        <input type="hidden" name="action" value="retry_failed_active">
+        <input type="hidden" name="q" value="{{.Q}}">
+        <input type="hidden" name="lib_id" value="{{.LibIDStr}}">
+        <input type="hidden" name="status" value="{{.Status}}">
+        <input type="hidden" name="retention" value="{{.Retention}}">
+        <input type="hidden" name="page" value="{{.Page}}">
+        <input type="hidden" name="per_page" value="{{.PerPage}}">
+        <button type="submit" class="text-button">重试全部失败文章</button>
+      </form>
+      {{end}}
+      <span class="head-count"><strong>{{.Total}}</strong> 篇</span>
+    </div>
+  </header>
+  <section id="batch-progress" class="task-region" data-batch="{{.Batch}}" data-writing="{{.Writing}}" {{if not .Batch}}hidden{{end}} aria-label="处理进度">
+    <div class="task-head"><strong id="batch-title">文章处理进度</strong><span id="batch-meta" class="task-counter"></span></div>
+    <progress class="queue-progress" id="batch-bar" max="100" value="0" aria-labelledby="batch-title"></progress>
+    <div class="task-bottom"><span id="batch-detail" role="status">正在读取进度…</span><button type="button" id="dismiss-progress" class="text-button" hidden>收起</button></div>
+  </section>
+  {{if .Done}}<p class="callout" role="status">队列里已没有下一篇待审核文章。写回进度可在上方查看。</p>{{end}}
+  <div class="queue-toolbar">
+    <nav class="retention-tabs" aria-label="文章保留状态">
+      <a {{if eq .Retention "active"}}aria-current="page"{{end}} href="{{index .RetentionURLs "active"}}">进行中</a>
+      <a {{if eq .Retention "archived"}}aria-current="page"{{end}} href="{{index .RetentionURLs "archived"}}">已归档</a>
+      <a {{if eq .Retention "trash"}}aria-current="page"{{end}} href="{{index .RetentionURLs "trash"}}">回收站</a>
+      <a {{if eq .Retention "all"}}aria-current="page"{{end}} href="{{index .RetentionURLs "all"}}">全部</a>
+    </nav>
+    <div class="queue-actions">
+      {{if .HasFilter}}<a class="text-button" href="/">清除筛选</a>{{end}}
+      {{if .Docs}}<span class="selection-hint">点印章勾选</span>{{end}}
+    </div>
+  </div>
+  <form method="get" action="/" id="queue-filters" class="filter-line">
+    {{if ne .Retention "active"}}<input type="hidden" name="retention" value="{{.Retention}}">{{end}}
+    <input type="hidden" name="per_page" value="{{.PerPage}}">
+    <label class="search-field">
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg>
+      <input type="search" name="q" value="{{.Q}}" placeholder="搜索标题或来源链接" aria-label="搜索文章标题或来源">
+    </label>
+    <label class="filter-select"><span class="visually-hidden">知识库</span>
+      <select name="lib_id" data-submit-filter>
+        <option value="">全部知识库</option>
+        {{range .Libraries}}<option value="{{.ID}}" {{if eq $.LibID .ID}}selected{{end}}>{{.Name}}</option>{{end}}
+      </select>
+    </label>
+    <label class="filter-select"><span class="visually-hidden">处理状态</span>
+      <select name="status" data-submit-filter>
+        <option value="">全部处理状态</option>
+        {{range .StatusOptions}}<option value="{{.Key}}" {{if eq $.Status .Key}}selected{{end}}>{{.Label}}</option>{{end}}
+      </select>
+    </label>
+    <button type="submit" class="button queue-search-submit">筛选</button>
+  </form>
+  {{if .Docs}}
+  <div class="selection-tools">
+    <button type="button" class="text-button" data-select-page>全选本页</button>
+  </div>
+  {{end}}
+  <form method="post" action="/docs/batch" id="batch-form">
+    <input type="hidden" name="q" value="{{.Q}}">
+    <input type="hidden" name="lib_id" value="{{.LibIDStr}}">
+    <input type="hidden" name="retention" value="{{.Retention}}">
+    <input type="hidden" name="status" value="{{.Status}}">
+    <input type="hidden" name="page" value="{{.Page}}">
+    <input type="hidden" name="per_page" value="{{.PerPage}}">
+    <div class="batch-toolbar" id="batch-toolbar" hidden>
+      <span class="selection-count" id="selection-count" aria-live="polite"></span>
+      <button type="button" class="text-button" data-clear-selection>取消选择</button>
+      <label>操作
+        <select name="action" id="batch-action">
+          <option value="archive">归档选中</option>
+          <option value="trash">移入回收站</option>
+          <option value="activate">恢复到进行中</option>
+          {{if eq .Retention "trash"}}<option value="purge">永久删除本地记录</option>{{end}}
+        </select>
+      </label>
+      <button type="submit" class="button primary small">执行</button>
+    </div>
+    <section id="article-list" aria-label="文章列表">
+      {{range .Docs}}
+      {{$cover := queueCover .}}
+      <article class="article-window entry{{if $cover}} has-scene{{end}}">
+        {{if $cover}}<div class="row-scene" aria-hidden="true"><img src="{{$cover}}" alt="" loading="lazy" decoding="async"></div>{{end}}
+        <div class="row-content">
+          <div class="row-kicker">
+            <label class="seal-select" title="勾选文章">
+              <input class="doc-check" type="checkbox" name="doc_ids" value="{{.ID}}" aria-label="勾选《{{.Title}}》">
+              <span class="seal-rotor" aria-hidden="true">
+                <span class="seal-face seal-front">{{if .LibraryName}}{{approvedSeal .LibraryName}}{{else}}<span class="unclassified-seal">待分类</span>{{end}}</span>
+                <span class="seal-face seal-back"><span class="selection-box"></span></span>
+              </span>
+            </label>
+            <div class="library-caption">
+              <div class="caption-head">
+                {{if .LibraryID.Valid}}<a class="library-label" href="/libraries/{{.LibraryID.Int64}}/profile">{{.LibraryName}}</a>{{else}}<span class="library-label">待分类</span>{{end}}
+                <span class="row-status {{rowStatus .}}">{{statusLabel (rowStatus .)}}</span>
+                {{if and (eq $.Retention "all") .Retention}}<span class="caption-stat">{{retentionLabel .Retention}}</span>{{end}}
+              </div>
+              <div class="caption-details">
+                <span class="caption-stat" title="已选 {{.SelectedCount}} 条">{{.TermCount}} 条注释</span>
+                <span class="caption-stat">{{formatCount .Units}} 字</span>
+                {{if .HasScore}}<span class="caption-stat">最高分 {{printf "%.2f" .TopScore}}</span>{{end}}
+                {{if .Author}}<span>{{.Author}}</span>{{end}}
+              </div>
+            </div>
+          </div>
+          <div class="row-copy">
+            <h2><a class="article-title" href="/docs/{{.ID}}">{{.Title}}</a></h2>
+            {{if .Error.Valid}}<p class="article-error">{{.Error.String}}</p>{{end}}
+          </div>
+        </div>
+      </article>
+      {{else}}
+      <div class="empty-state">
+        <h2>当前视图没有文章</h2>
+        {{if .HasFilter}}<a class="button" href="/">查看进行中的文章</a>{{else}}<button type="button" class="button primary" data-open-import>导入文章</button>{{end}}
+      </div>
+      {{end}}
+    </section>
+  </form>
+  <div class="pagination">
+    <form method="get" action="/" class="page-size-form">
+      <input type="hidden" name="q" value="{{.Q}}">
+      <input type="hidden" name="lib_id" value="{{.LibIDStr}}">
+      <input type="hidden" name="retention" value="{{.Retention}}">
+      <input type="hidden" name="status" value="{{.Status}}">
+      <label>每页 <select name="per_page" data-submit-filter aria-label="每页文章数量">
+        {{range .PageSizes}}<option value="{{.}}" {{if eq $.PerPage .}}selected{{end}}>{{.}} 篇</option>{{end}}
+      </select></label>
+      <noscript><button type="submit">应用</button></noscript>
+    </form>
+    <div class="pagination-controls">
+      {{if .PrevURL}}<a href="{{.PrevURL}}">上一页</a>{{end}}
+      <span>{{.Page}} / {{.TotalPages}}</span>
+      {{if .NextURL}}<a href="{{.NextURL}}">下一页 →</a>{{end}}
+    </div>
+  </div>
+</section>
+{{end}}

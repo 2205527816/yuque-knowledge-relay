@@ -1,0 +1,18 @@
+{{define "title"}}图标样张 · 知识库中转站{{end}}
+{{define "content"}}
+<section class="toolbar">
+  <h1>图标样张</h1>
+  <span class="muted">词汇提取自语雀知识库封面（文件夹 / 对话 / 书本 / 多人 / 档案盒），几何化重构为包豪斯符号：圆、方、三角 + 红黄蓝，零依赖。</span>
+</section>
+{{range .IconGroups}}
+<h2>{{.Name}}</h2>
+<div class="icon-grid">
+  {{range .Items}}
+  <div class="icon-card">
+    <span class="icon-use"><svg class="icon" aria-hidden="true"><use href="/static/icons.svg#{{.ID}}"></use></svg></span>
+    <p>{{.Label}}</p>
+  </div>
+  {{end}}
+</div>
+{{end}}
+{{end}}

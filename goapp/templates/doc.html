@@ -1,0 +1,134 @@
+{{define "title"}}{{.Doc.Title}} · 知识库中转站{{end}}
+{{define "content"}}
+<section class="review-view view-transition" aria-labelledby="review-title">
+  <nav class="breadcrumb" aria-label="当前位置"><a href="/">文章队列</a><span aria-hidden="true">/</span><span>审核文章</span></nav>
+  <header class="review-head">
+    <div class="review-title-row">
+      {{if .Library}}{{approvedSeal .Library.Name}}{{end}}
+      <div>
+        <h1 id="review-title">{{.Doc.Title}}</h1>
+        <div class="review-meta">
+          {{if .Library}}<a href="/libraries/{{.Library.ID}}/profile">{{.Library.Name}}</a>{{end}}
+          <span>{{formatCount .Doc.Units}} 字</span>
+          <span class="row-status {{.Doc.Status}}">{{statusLabel .Doc.Status}}</span>
+          <span>{{retentionLabel .Doc.Retention}}</span>
+          {{if .Doc.SourceURL}}<a href="{{.Doc.SourceURL}}" target="_blank" rel="noreferrer">打开原文 ↗</a>{{end}}
+          {{if and .Doc.YuqueDocID.Valid .Library}}<a href="https://www.yuque.com/{{.Library.Namespace}}/{{.Library.Slug}}/kb-{{.HashShort}}" target="_blank" rel="noreferrer">打开语雀 ↗</a>{{end}}
+        </div>
+      </div>
+    </div>
+    {{if or .Conflict (eq .Doc.Error.String "远端正文已被修改，确认后可强制覆盖") (eq .Doc.Error.String "远端文档已转为 lake 格式，确认后可强制覆盖")}}
+    <div class="callout conflict-warning" role="alert">
+      <span>{{if .Doc.Error.Valid}}{{.Doc.Error.String}}{{else}}远端正文有改动，请先核对语雀文档。{{end}}</span>
+      <form method="post" action="/docs/{{.Doc.ID}}/write" data-confirm="强制覆盖会替换语雀上的整篇正文。确认继续？">
+        <input type="hidden" name="force" value="1">
+        <button class="button danger small" type="submit">强制覆盖远端</button>
+      </form>
+    </div>
+    {{else if .Doc.Error.Valid}}<p class="callout" role="alert">{{.Doc.Error.String}}</p>{{end}}
+  </header>
+  <div class="review-tools">
+    <form method="post" action="/docs/{{.Doc.ID}}/library" class="inline-settings">
+      <label for="review-library">归入知识库
+        <select id="review-library" name="library_id" required>
+          <option value="">选择知识库</option>
+          {{range .Libraries}}<option value="{{.ID}}" {{if $.Library}}{{if eq .ID $.Library.ID}}selected{{end}}{{end}}>{{.Name}}</option>{{end}}
+        </select>
+      </label>
+      <button type="submit" class="text-button">改分类</button>
+    </form>
+    <div class="review-local-actions">
+      {{if eq .Doc.Status "failed"}}
+      <form method="post" action="/docs/{{.Doc.ID}}/retry"><button type="submit" class="text-button">重试处理</button></form>
+      {{end}}
+      {{if eq .Doc.Retention "active"}}
+      <form method="post" action="/docs/{{.Doc.ID}}/retention">
+        <input type="hidden" name="retention_status" value="archived">
+        <button type="submit" class="text-button">归档文章</button>
+      </form>
+      {{else}}
+      <form method="post" action="/docs/{{.Doc.ID}}/retention">
+        <input type="hidden" name="retention_status" value="active">
+        <button type="submit" class="text-button">恢复到进行中</button>
+      </form>
+      {{end}}
+      {{if ne .Doc.Retention "trash"}}
+      <form method="post" action="/docs/{{.Doc.ID}}/retention" data-confirm="移入回收站后仍可恢复，继续？">
+        <input type="hidden" name="retention_status" value="trash">
+        <button type="submit" class="text-button">移入回收站</button>
+      </form>
+      {{end}}
+    </div>
+  </div>
+  <nav class="review-mobile-links" aria-label="跳到阅读区域"><a href="#reader-column">阅读正文 ↓</a><a href="#annotation-column">编辑注释 ↓</a></nav>
+  <div class="review-layout" data-article-id="{{.Doc.ID}}">
+    <section class="reader-column review-pane" id="reader-column">
+      <div class="section-actions review-pane-head"><h2 id="review-reader-heading">文章正文</h2><span class="reader-mark-key">已选注释的标记</span></div>
+      <div class="review-pane-scroll" id="review-reader-scroll" role="region" tabindex="0" aria-labelledby="review-reader-heading">
+        <div class="review-pane-content">
+          <div class="reader-content" id="preview-wrap">
+            <article class="article">{{.Preview}}</article>
+            {{if .Missing}}<p class="callout">未命中：{{joinCN .Missing}}</p>{{end}}
+          </div>
+          <details class="review-details">
+            <summary>本篇处理进度 {{.DocProgress.Pct}}%</summary>
+            <p>{{if .DocProgress.Position}}{{.DocProgress.Position}} / {{.DocProgress.Pending}} 篇待处理 · {{end}}接收 → 分类 → 抽词 → 注释 → 写回</p>
+          </details>
+          {{if .ScoreItems}}
+          <details class="review-details scores">
+            <summary>分类打分</summary>
+            <table><thead><tr><th>库</th><th>分数</th></tr></thead><tbody>
+              {{range .ScoreItems}}<tr><td>{{.Name}}</td><td>{{printf "%.2f" .Score}}</td></tr>{{end}}
+            </tbody></table>
+          </details>
+          {{end}}
+        </div>
+      </div>
+    </section>
+    <div class="review-scroll-rail">
+      <input type="range" class="review-scrollbar review-scrollbar-reader" min="0" max="100" step="any" value="0" aria-label="正文滚动位置" aria-controls="review-reader-scroll">
+      <input type="range" class="review-scrollbar review-scrollbar-notes" min="0" max="100" step="any" value="0" aria-label="注释滚动位置" aria-controls="review-notes-scroll">
+    </div>
+    <aside class="annotation-column review-pane" id="annotation-column">
+      <div class="annotation-heading review-pane-head"><h2 id="review-notes-heading">注释词 <span id="term-selection-count"></span></h2></div>
+      <div class="review-pane-scroll" id="review-notes-scroll" role="region" tabindex="0" aria-labelledby="review-notes-heading">
+        <div class="review-pane-content">
+          <form id="terms-form" method="post" action="/docs/{{.Doc.ID}}/write" data-doc-id="{{.Doc.ID}}">
+            {{if .Terms}}<div class="term-bulk"><button type="button" class="text-button" data-select-terms="yes">全选</button><button type="button" class="text-button" data-select-terms="no">全不选</button></div>{{end}}
+            {{range .Terms}}
+            <section class="term-card">
+              <div class="term-head">
+                <label><input type="checkbox" name="term_ids" value="{{.ID}}" {{if .Selected}}checked{{end}}><span>{{.Term}}</span></label>
+                {{if .Type}}<span class="term-type">{{.Type}}</span>{{end}}
+              </div>
+              <p class="term-sources">
+                {{if .HasWiki}}<span>百度百科</span>{{end}}{{if .HasGoogle}}<span>Bing</span>{{end}}{{if .HasCache}}<span>缓存</span>{{end}}
+                {{if .Fallback}}<span class="source-fallback" title="释义由模型生成">仅模型</span>{{end}}{{if .Manual}}<span>手动</span>{{end}}
+              </p>
+              <label class="visually-hidden" for="explanation-{{.ID}}">{{.Term}}的释义</label>
+              <textarea id="explanation-{{.ID}}" name="explanation_{{.ID}}" rows="4">{{.Explanation}}</textarea>
+              <button type="submit" formaction="/docs/{{$.Doc.ID}}/terms/{{.ID}}/regenerate" class="text-button term-regenerate">重新生成释义</button>
+            </section>
+            {{else}}
+            <p>暂无候选词，可在下方手动添加。</p>
+            {{end}}
+          </form>
+          <form method="post" action="/docs/{{.Doc.ID}}/terms/add" class="add-term-form">
+            <label for="new-term">手动添加词条</label>
+            <div class="inline-settings"><input id="new-term" name="term" placeholder="如：路径依赖" required><button class="button small">添加并生成释义</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="annotation-submit">
+        <div class="buttons">
+          <button type="submit" form="terms-form" formaction="/docs/{{.Doc.ID}}/save" class="button">保存草稿</button>
+          <button type="submit" form="terms-form" class="button primary">写回语雀</button>
+        </div>
+      </div>
+    </aside>
+    <div class="review-resize-rail">
+      <div class="review-resize-handle" tabindex="0" role="slider" aria-label="调整正文和注释窗口" aria-description="上下方向键调整高度，左右方向键调整宽度" aria-keyshortcuts="ArrowUp ArrowDown ArrowLeft ArrowRight Home End" aria-orientation="vertical" aria-controls="review-reader-scroll review-notes-scroll" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" title="上下拖动调整高度，左右拖动调整宽度"></div>
+    </div>
+  </div>
+</section>
+{{end}}

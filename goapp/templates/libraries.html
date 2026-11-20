@@ -1,0 +1,18 @@
+{{define "title"}}知识库 · 知识库中转站{{end}}
+{{define "content"}}
+<section class="libraries-view view-transition">
+  <header class="page-head"><h1>知识库</h1><span class="head-count">{{len .Libraries}} 个库</span></header>
+  <div class="library-grid">
+    {{range .Libraries}}{{if index $.LibraryDescriptions .Name}}
+    <a class="library-tile" href="/libraries/{{.ID}}/profile">
+      {{approvedSeal .Name}}
+      <h2>{{.Name}}</h2>
+      <p>{{index $.LibraryDescriptions .Name}}</p>
+    </a>
+    {{end}}{{end}}
+  </div>
+  {{range .Libraries}}{{if not (index $.LibraryDescriptions .Name)}}
+  <p class="namespace"><a href="/libraries/{{.ID}}/profile">{{.Name}}</a>{{if eq .Name "SimpRead待定"}} · 简悦导入的待归类文章{{end}}</p>
+  {{end}}{{end}}
+</section>
+{{end}}

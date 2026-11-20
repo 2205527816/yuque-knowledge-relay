@@ -1,0 +1,108 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <!-- 词汇取自语雀知识库封面截图（文件夹/对话/书本/多人/档案盒），几何化重构为包豪斯符号：只用圆、方、三角与红黄蓝 -->
+    <symbol id="doc" viewBox="0 0 24 24">
+      <path d="M3.5 7.5h6l1.8 2h9.2v9.5h-17z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M4 8h5.2l1.2 1.5H4z" fill="currentColor"/>
+      <circle cx="16.5" cy="14.5" r="2.2" fill="#ff0000"/>
+    </symbol>
+    <symbol id="doc-word" viewBox="0 0 24 24">
+      <path d="M3.5 7.5h6l1.8 2h9.2v9.5h-17z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M4 8h5.2l1.2 1.5H4z" fill="currentColor"/>
+      <path d="M16.5 12l3 5h-6z" fill="#0000ff"/>
+    </symbol>
+    <symbol id="doc-file" viewBox="0 0 24 24">
+      <path d="M3.5 7.5h6l1.8 2h9.2v9.5h-17z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M4 8h5.2l1.2 1.5H4z" fill="currentColor"/>
+      <rect x="14.5" y="12.5" width="4" height="4" fill="#ff0000"/>
+    </symbol>
+    <symbol id="chat" viewBox="0 0 24 24">
+      <path d="M4 5h16v10H11l-4 4v-4H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="chat-hot" viewBox="0 0 24 24">
+      <ellipse cx="11" cy="10" rx="7.5" ry="5.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M6.5 14.3l-1.6 4 4-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M6.2 10.5c1.1-1.4 2.2-1.4 3.3 0s2.2 1.4 3.3 0 2.2-1.4 3.3 0" fill="none" stroke="#ffcc00" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="chat-news" viewBox="0 0 24 24">
+      <ellipse cx="9.5" cy="9.5" rx="6.3" ry="4.5" fill="#0000ff" fill-opacity=".12" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M6 13l-1.2 3.3 3.2-2.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <ellipse cx="15.2" cy="13.2" rx="5.2" ry="3.8" fill="none" stroke="#0000ff" stroke-width="1.6"/>
+      <path d="M17.7 16l.8 2.5-2.6-1.6" fill="none" stroke="#0000ff" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="chat-casual" viewBox="0 0 24 24">
+      <path d="M4 5h16v10H11l-4 4v-4H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <circle cx="12" cy="10" r="2" fill="#ff0000"/>
+    </symbol>
+    <symbol id="chat-mood" viewBox="0 0 24 24">
+      <path d="M4 5h16v10H11l-4 4v-4H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <circle cx="10" cy="10" r="1.7" fill="#0000ff"/>
+      <path d="M12.5 12l1.5-4 1.5 4z" fill="#ffcc00"/>
+    </symbol>
+    <symbol id="book" viewBox="0 0 24 24">
+      <path d="M4.5 5.5h5.2c1.2 0 2.3.5 2.3 1.7v12.2c0-1.1-1.1-1.7-2.3-1.7H4.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M19.5 5.5h-5.2c-1.2 0-2.3.5-2.3 1.7v12.2c0-1.1 1.1-1.7 2.3-1.7h5.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="book-tech" viewBox="0 0 24 24">
+      <path d="M4.5 5.5h5.2c1.2 0 2.3.5 2.3 1.7v12.2c0-1.1-1.1-1.7-2.3-1.7H4.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M19.5 5.5h-5.2c-1.2 0-2.3.5-2.3 1.7v12.2c0-1.1 1.1-1.7 2.3-1.7h5.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M15.5 9.5h3M15.5 12h3M15.5 14.5h2" stroke="#ff0000" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="book-science" viewBox="0 0 24 24">
+      <path d="M4.5 5.5h5.2c1.2 0 2.3.5 2.3 1.7v12.2c0-1.1-1.1-1.7-2.3-1.7H4.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M19.5 5.5h-5.2c-1.2 0-2.3.5-2.3 1.7v12.2c0-1.1 1.1-1.7 2.3-1.7h5.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <circle cx="16.8" cy="12" r="2.3" fill="#0000ff"/>
+    </symbol>
+    <symbol id="users" viewBox="0 0 24 24">
+      <circle cx="8.5" cy="8.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="15.8" cy="9.8" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M4.5 18q4-5.2 8 0M13 18q2.8-3.5 6.5 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="users-people" viewBox="0 0 24 24">
+      <circle cx="8.5" cy="8.5" r="4.8" fill="#ffcc00"/>
+      <circle cx="8.5" cy="8.5" r="2.8" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="16" cy="9.8" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M4.5 18q4-5.2 8 0M13 18q2.8-3.5 6.5 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="users-livelihood" viewBox="0 0 24 24">
+      <circle cx="15.8" cy="9.8" r="4" fill="#0000ff" fill-opacity=".14"/>
+      <circle cx="8.5" cy="8.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="15.8" cy="9.8" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M4.5 18q4-5.2 8 0M13 18q2.8-3.5 6.5 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="method" viewBox="0 0 24 24">
+      <circle cx="15.8" cy="9.8" r="4" fill="#0000ff" fill-opacity=".14"/>
+      <circle cx="8.5" cy="8.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="15.8" cy="9.8" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M4.5 18q4-5.2 8 0M13 18q2.8-3.5 6.5 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="box" viewBox="0 0 24 24">
+      <path d="M4 8h16v3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M5 11h14v8H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M10 8V5h4v3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="box-research" viewBox="0 0 24 24">
+      <path d="M4 8h16v3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M5 11h14v8H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M10 8V5h4v3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="12" cy="15" r="2" fill="#0000ff"/>
+    </symbol>
+    <symbol id="box-career" viewBox="0 0 24 24">
+      <path d="M4 8h16v3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M5 11h14v8H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M10 8V5h4v3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M12 13l2.5 4h-5z" fill="#ffcc00"/>
+    </symbol>
+    <symbol id="box-business" viewBox="0 0 24 24">
+      <path d="M4 8h16v3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M5 11h14v8H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M10 8V5h4v3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <rect x="10.5" y="13.5" width="3" height="3" transform="rotate(45 12 15)" fill="#ff0000"/>
+    </symbol>
+    <symbol id="logo" viewBox="0 0 24 24">
+      <rect width="24" height="24" fill="#000000"/>
+      <circle cx="12" cy="12" r="6.5" fill="#ffcc00"/>
+      <path d="M8 16l4-8 4 8z" fill="#0000ff"/>
+    </symbol>
+  </defs>
+</svg>
